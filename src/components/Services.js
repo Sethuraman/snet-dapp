@@ -14,7 +14,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import BlockchainHelper from "./BlockchainHelper.js"
-
+import './Services.css';
 
 const TabContainer = (props) => {
   return (
@@ -292,7 +292,7 @@ fetch( encodeURI(_urlservicebuf))
       var event = result.event;
       console.log("event: " + event);
       var agentGroupID = this.base64ToHex(groupidgetter);
-      if(event == "ChannelOpen")
+      if(event === "ChannelOpen")
       {
         var MPEChannelId = result.args.channelId;
         var channelSender = result.args.sender;
@@ -509,6 +509,7 @@ handlehealthsort()
 
   componentDidMount(){    
    window.addEventListener('load', () => this.handleWindowLoad());
+   window.addEventListener('message', this.handleJobInvocation);
    this.handleWindowLoad();
   }
 
@@ -651,8 +652,15 @@ handlehealthsort()
     return msg;
   }
 
-  handleJobInvocation(data,dataservicestatus)
+  handleJobInvocation(event)
   {
+    if (event.origin !== "http://localhost:3000") {
+      return;
+    }
+
+    const data = this.state.modaluser;
+    const serviceInputData = event.data;
+    console.log(serviceInputData);
     console.log("Invoking service " + this.state.inputservicename + " and method name " +  this.state.inputmethodname)
     var from = web3.eth.defaultAccount
     var nonce = 0;
@@ -679,9 +687,9 @@ handlehealthsort()
       console.log("Using signature " + base64data)
 
       //this.serviceSpecJSON =>>> Root.fromJSON(serviceSpec[0])
-      const serviceSpecJSON = this.serviceSpecJSON 
-      const serviceName = this.state.inputservicename
-      const methodName = this.state.inputmethodname
+      const serviceSpecJSON = serviceInputData.jsonInput;
+      const serviceName = serviceInputData.serviceName;
+      const methodName = serviceInputData.methodName;
 
       const requestHeaders = {"snet-payment-type":"escrow",
                               "snet-payment-channel-id":parseInt(this.state.channelstateid), 
@@ -1147,7 +1155,7 @@ async waitForTransaction(hash) {
         <Tab disabled ={this.state.channelstateid !== '' && this.state.openchaining===false?false:true } label={<span className="funds-title">Result</span>}  />
       </Tabs>
 {
-  valueTab === 0 && <TabContainer> 
+  valueTab === 1 && <TabContainer>
   { (this.state.startjobfundinvokeres)?
     <div className="row channels-sec">
     <div className="col-xs-12 col-sm-2 col-md-2 mtb-10">Amount:</div>
@@ -1167,27 +1175,8 @@ async waitForTransaction(hash) {
   <p style={{fontSize:"12px",color:"red"}}>{this.state.depositopenchannelerror!==''?ERROR_UTILS.sanitizeError(this.state.depositopenchannelerror):''}</p>
   </TabContainer>
   } 
-      {valueTab === 1 && <TabContainer >
-        <div className="row">
-        <div  className="col-md-3 col-lg-3" style={{fontSize:"13px",marginLeft:"10px"}}>Service Name</div><div className="col-md-3 col-lg-3"> 
-        <input type="text" ref="serviceref" style={{height:"30px",width:"250px",fontSize:"13px", marginBottom:"5px"}} onChange={(e) =>this.changehandlerservicename(e,this.state.modaluser)}></input>
-       
-        
-        </div>
-        </div>
-        <div className="row">
-        <div  className="col-md-3 col-lg-3" style={{fontSize:"13px",marginLeft:"10px"}}>Method Name</div><div className="col-md-3 col-lg-3"> 
-        <input type="text" style={{height:"30px",width:"250px",fontSize:"13px", marginBottom:"5px"}} ref="methodref" onChange={() =>this.changehandlermethodname()} ></input>
-     
-        </div>
-        </div>
-          <div className="row">
-          <div className="col-md-3 col-lg-3" style={{fontSize:"13px",marginLeft:"10px"}}>Json Input</div><div className="col-md-3 col-lg-3"><textarea placeholder="JSON format..." style={{rows:"4", cols:"50",width:"250px",fontSize:"13px"}} value={this.state.inputservicejson} onChange={(e) =>this.changehandlerervicejson(e)}/></div></div>
-        <div className="row">
-        <div className="col-md-6 col-lg-6" style={{textAlign:"right"}}>
-        <button type="button" className="btn btn-primary" onClick={() =>this.handleJobInvocation(this.state.modaluser,this.state.modalservicestatus)}>Invoke</button></div>
-        </div>
-        
+      {valueTab === 0 && <TabContainer >
+        <iframe className="serviceUIFrame" src="http://localhost:3000/"/>
       </TabContainer>}
       {valueTab === 2 && <TabContainer> 
         {this.state.servicegrpcresponse?<p style={{fontSize:"13px"}}>Response from service is {this.state.servicegrpcresponse} </p>:null}
