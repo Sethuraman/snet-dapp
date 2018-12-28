@@ -1,5 +1,4 @@
 import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
 import News from './News';
 
 const SampleServices = () => (
@@ -8,4 +7,4 @@ const SampleServices = () => (
   </React.Fragment>
 );
 
-export default withStyles(styles)(SampleServices);
+export default (SampleServices);
