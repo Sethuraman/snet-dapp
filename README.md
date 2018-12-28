@@ -1,3 +1,5 @@
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
 # snet-dapp
 
 This Dapp allows you to browse the list of SingularityNET Agents from the SingularityNET Registry and call them to provide a Service.
@@ -25,12 +27,13 @@ The DApp can currently only interact with services that match the API of the exa
 ## Development instructions
 * Install [Node.js and npm](https://nodejs.org/)
 * `npm install` to get dependencies
-* `npm run serve` to serve the application locally and watch source files for modifications
+* `npm run start` to serve the application locally and watch source files for modifications
 
 ### Deployment instructions
 * `npm run build` builds the application distributable files to the `dist` directory
 * `npm run deploy`; the target S3 Bucket for the deployment and its region are specified as command line parameters in the package.json file npm script
 
 ### Additional commands
+## TODO:
 * `npm run build-analyze` shows the size of the application's bundle components; the original size, the parsed size (uglified + tree-shaken) and the gzipped size
 * `npm run serve-dist` serves the `dist` directory locally

@@ -1,30 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from "./App.js";
-import {BrowserRouter,Route,Switch} from 'react-router-dom';
-import {Profile} from "./components/Profile.js";
-import SampleServices from './components/Services';
-import Landingpage from "./components/Landing.js";
-import connectwallet from "./components/ConnectWallet.js";
-ReactDOM.render(
-  <BrowserRouter>
-  <div>
-   <Switch>
-  <Route path="/" component={Landingpage} exact />
-    <Route path="/App" component ={App}>
-    <Route path="/Profile" component={Profile}></Route>
-  </Route>
-    <Route path="/sampleservices" component={SampleServices}></Route>
-    <Route path="/Profile" component={Profile}></Route>
-    <Route path="/connectwallet" component={connectwallet}/>
-  
-  </Switch>
-  </div>
-  </BrowserRouter>
- ,
-  document.getElementById('react-root')
+import App from './common/components/App'
+import store from './common/redux/store';
+import { Provider } from 'react-redux';
+
+const Main = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
 
 
+ReactDOM.render(<Main />, document.getElementById('root'));
 
- 
